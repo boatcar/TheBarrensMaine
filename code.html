@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club 77 | Charter Memberships</title>
+    <style>
+        :root {
+            --bg-dark: #0f1115;
+            --card-bg: #161920;
+            --border-color: #2a2e39;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent-bronze: #cd7f32;
+            --accent-silver: #c0c0c0;
+            --accent-gold: #d4af37;
+            --accent-platinum: #e5e4e2;
+            --accent-black: #111111;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            letter-spacing: -0.025em;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .tiers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .tier-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .tier-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--text-muted);
+        }
+
+        .tier-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+
+        .tier-bronze .tier-indicator { background-color: var(--accent-bronze); }
+        .tier-silver .tier-indicator { background-color: var(--accent-silver); }
+        .tier-gold .tier-indicator { background-color: var(--accent-gold); }
+        .tier-platinum .tier-indicator { background-color: var(--accent-platinum); }
+        .tier-black .tier-indicator { background-color: #333; border: 1px solid #777; }
+
+        .tier-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 5px 0;
+        }
+
+        .tier-price {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .availability-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .availability-badge span {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .tier-perks {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 30px 0;
+            flex-grow: 1;
+        }
+
+        .tier-perks li {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tier-perks li::before {
+            content: "?";
+            color: var(--text-main);
+            margin-right: 8px;
+            font-weight: bold;
+        }
+
+        .btn-join {
+            background-color: var(--text-main);
+            color: var(--bg-dark);
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            width: 100%;
+        }
+
+        .btn-join:hover {
+            opacity: 0.9;
+        }
+
+        .btn-join:disabled {
+            background-color: #333;
+            color: #777;
+            cursor: not-allowed;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .modal h2 { margin-top: 0; }
+        .modal p { color: var(--text-muted); font-size: 0.95rem; }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-buttons button { flex: 1; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; }
+        .btn-cancel { background: transparent; color: var(--text-muted); border: 1px solid var(--border-color) !important; }
+        .btn-confirm { background: var(--text-main); color: var(--bg-dark); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Club 77 Vault</h1>
+        <p>Secure your legacy spot in Northern New England's private action sports resort.</p>
+    </header>
+
+    <div class="tiers-grid" id="tiers-container"></div>
+</div>
+
+<div class="modal-overlay" id="checkout-modal">
+    <div class="modal">
+        <h2 id="modal-tier-title">Secure Membership</h2>
+        <p id="modal-tier-price"></p>
+        <p>Simulate a successful payment gateway transaction to lock in this membership spot and decrement the public inventory counter.</p>
+        <div class="modal-buttons">
+            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-confirm" onclick="processPayment()">Simulate Success</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let tiersData = [
+        { id: 'bronze', name: 'Bronze Tier', price: 1000, total: 10, remaining: 10, class: 'tier-bronze', perks: ['2 Annual Comped Nights', 'Bronze Foil Membership Card', 'Custom Car Sticker'] },
+        { id: 'silver', name: 'Silver Tier', price: 2000, total: 10, remaining: 8, class: 'tier-silver', perks: ['5 Annual Comped Nights', 'Brushed Silver Key Fob', 'Silver Accent Apparel Drop'] },
+        { id: 'gold', name: 'Gold Tier', price: 3000, total: 10, remaining: 4, class: 'tier-gold', perks: ['5 Annual Comped Nights', 'Polished Gold Embroidery Hat', 'Deep-Woods Apparel Package'] },
+        { id: 'platinum', name: 'Platinum Tier', price: 4000, total: 10, remaining: 2, class: 'tier-platinum', perks: ['5 Annual Comped Nights', 'Permanent Pro Gear Locker On-Site', 'Stealth Technical Gear'] },
+        { id: 'black', name: 'Black Tier — Founders', price: 5000, total: 37, remaining: 12, class: 'tier-black', perks: ['10 Annual Comped Nights', '10-Year Wall Plaque Honors', 'Murdered-Out Matte Black Box & Access'] }
+    ];
+
+    let selectedTierId = null;
+
+    function renderTiers() {
+        const container = document.getElementById('tiers-container');
+        container.innerHTML = '';
+
+        tiersData.forEach(tier => {
+            const isSoldOut = tier.remaining <= 0;
+            
+            const card = document.createElement('div');
+            card.className = `tier-card ${tier.class}`;
+            card.innerHTML = `
+                <div class="tier-indicator"></div>
+                <div class="tier-title">${tier.name}</div>
+                <div class="tier-price">$${tier.price.toLocaleString()}</div>
+                <div class="availability-badge">
+                    <span>${tier.remaining}</span> of ${tier.total} spots remaining
+                </div>
+                <ul class="tier-perks">
+                    ${tier.perks.map(perk => `<li>${perk}</li>`).join('')}
+                </ul>
+                <button class="btn-join" ${isSoldOut ? 'disabled' : ''} onclick="openCheckout('${tier.id}')">
+                    ${isSoldOut ? 'Vault Sealed (Sold Out)' : 'Claim Membership'}
+                </button>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function openCheckout(tierId) {
+        selectedTierId = tierId;
+        const tier = tiersData.find(t => t.id === tierId);
+        document.getElementById('modal-tier-title').innerText = tier.name;
+        document.getElementById('modal-tier-price').innerText = `$${tier.price.toLocaleString()} Due Today`;
+        document.getElementById('checkout-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('checkout-modal').style.display = 'none';
+        selectedTierId = null;
+    }
+
+    function processPayment() {
+        if (!selectedTierId) return;
+
+        const tier = tiersData.find(t => t.id === selectedTierId);
+        if (tier && tier.remaining > 0) {
+            tier.remaining -= 1;
+        }
+
+        closeModal();
+        renderTiers();
+    }
+
+    renderTiers();
+</script>
+
+</body>
+</html>
