@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club 77 | The Barrens & Blueberry Operations</title>
+    <style>
+        :root {
+            --bg-dark: #0f1115;
+            --card-bg: #161920;
+            --border-color: #2a2e39;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent-blue: #4a90e2;
+            --accent-gold: #d4af37;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--text-main);
+        }
+
+        .hero {
+            max-width: 900px;
+            margin: 60px auto 40px auto;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background: rgba(74, 144, 226, 0.1);
+            color: var(--accent-blue);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 20px;
+            border: 1px solid rgba(74, 144, 226, 0.3);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .content-section {
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 35px;
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin: 0 0 15px 0;
+        }
+
+        .card ul {
+            padding-left: 20px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .card ul li {
+            margin-bottom: 8px;
+        }
+
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 40px;
+        }
+
+        .spec-table th, .spec-table td {
+            padding: 18px 24px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .spec-table th {
+            background: rgba(255, 255, 255, 0.02);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .spec-table td {
+            font-size: 0.95rem;
+        }
+
+        .spec-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 100px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Club 77 // The Barrens</div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="vault.html" class="nav-link">Vault Tiers</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-tag">Stockton Springs Agro-Ecosystem</div>
+        <h1>The Wild Lowbush Barrens</h1>
+        <p>21 acres of historic coastal Maine terrain sitting on Route 1A. Dual-purpose topography uniting high-speed gravity trail corridors with heritage wild blueberry production.</p>
+    </section>
+
+    <div class="content-section">
+        <div class="grid-2">
+            <div class="card">
+                <h3>Topography & Trail Integration</h3>
+                <p>The property transitions from sweeping, sun-drenched upland ridges down into deep evergreen timber buffers.</p>
+                <ul>
+                    <li>Natural granite outcrops and sweeping organic soil lines.</li>
+                    <li>Open sightlines across the active barrens minimizing blind trail transitions.</li>
+                    <li>Configured specifically to support all-season utility equipment and Kubota L02 series maintenance access.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Agri-Operations & Harvest</h3>
+                <p>Balancing active trail infrastructure with high-yield wild lowbush blueberry (Vaccinium angustifolium) cultivation.</p>
+                <ul>
+                    <li>Hand-rake and commercial management protocols across open parcels.</li>
+                    <li>Flash-freezing and sustainable wholesale paper-pulp packaging tracks.</li>
+                    <li>Integrated land management preserving native Maine flora alongside recreational zones.</li>
+                </ul>
+            </div>
+        </div>
+
+        <table class="spec-table">
+            <thead>
+                <tr>
+                    <th>Site Parameter</th>
+                    <th>Specification Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Location</strong></td>
+                    <td>Route 1A Corridor, Stockton Springs, Maine</td>
+                </tr>
+                <tr>
+                    <td><strong>Parcel Footprint</strong></td>
+                    <td>21 Acres of Mixed Ridges, Barrens, and Timber</td>
+                </tr>
+                <tr>
+                    <td><strong>Agricultural Focus</strong></td>
+                    <td>Wild Lowbush Blueberry Production & Preservation</td>
+                </tr>
+                <tr>
+                    <td><strong>Recreational Infrastructure</strong></td>
+                    <td>Private Flow Trails, Pump Zones, and Conex Skybox HQ</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Stockton Springs Micro-Resort & Club 77. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
