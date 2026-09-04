@@ -224,8 +224,9 @@ https://templatemo.com/tm-612-parallax-starter
         }, { passive: true });
 
         compareSlider.addEventListener('touchmove', function (event) {
+            event.preventDefault();
             setFromPointer(event.touches[0]);
-        }, { passive: true });
+        }, { passive: false });
 
         updateCompareSlider(compareRange.value);
     });
