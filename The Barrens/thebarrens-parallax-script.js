@@ -347,7 +347,7 @@ https://templatemo.com/tm-612-parallax-starter
     // --- Contact Form ---
     var contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        var contactScriptUrl = 'https://script.google.com/macros/s/AKfycbzfNEpMkS2Di7aW2HJyz5IXN1grdenXnh8oz53h0mm8pHnokjEsgVwdtBAmIIt7uWCF/exec';
+        var contactScriptUrl = 'https://script.google.com/macros/s/AKfycbwVhNBALd6s23vJPhJRHOZBdpwHVKOOpbOh_vzUWMk-dSN1cfOtu29ynyyGnUQ8LuOH/exec';
         var contactSubmitBtn = contactForm.querySelector('button[type="submit"]');
 
         contactForm.addEventListener('submit', function (e) {
