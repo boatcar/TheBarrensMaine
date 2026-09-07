@@ -443,40 +443,7 @@ https://templatemo.com/tm-612-parallax-starter
             var popupEmailInput = document.getElementById('popup-email');
             var popupNameInput = document.getElementById('popup-name');
             var popupJoinBtn = popupForm.querySelector('.popup-join-btn');
-            var mlFormUrl = 'https://assets.mailerlite.com/jsonp/2620025/forms/97063943125184132/subscribe';
-
-            var submitToMailerLite = function (email, name, onSuccess, onError) {
-                var callbackName = 'mlPopupCallback_' + Date.now();
-                var script = document.createElement('script');
-
-                var cleanup = function () {
-                    delete window[callbackName];
-                    if (script.parentNode) {
-                        script.parentNode.removeChild(script);
-                    }
-                };
-
-                window[callbackName] = function (response) {
-                    cleanup();
-                    if (response && response.success) {
-                        onSuccess();
-                    } else {
-                        onError();
-                    }
-                };
-
-                var params = 'fields[email]=' + encodeURIComponent(email) + '&callback=' + callbackName;
-                if (name) {
-                    params += '&fields[name]=' + encodeURIComponent(name);
-                }
-
-                script.src = mlFormUrl + '?' + params;
-                script.onerror = function () {
-                    cleanup();
-                    onError();
-                };
-                document.body.appendChild(script);
-            };
+            var mlScriptUrl = 'https://script.google.com/macros/s/AKfycbzAM-TQdeUNj7VB4Rqh8PYVdOXUNkw2dRpvgwoesKzwM-zAk9BY8AjniLg788Dnq9B4/exec';
 
             popupForm.addEventListener('submit', function (e) {
                 e.preventDefault();
@@ -491,24 +458,37 @@ https://templatemo.com/tm-612-parallax-starter
                     popupJoinBtn.disabled = true;
                 }
 
-                submitToMailerLite(email, name, function () {
-                    popupForm.reset();
-                    if (popupJoinBtn) {
-                        popupJoinBtn.disabled = false;
-                    }
-                    if (popupSignup && popupSuccess) {
-                        popupSignup.hidden = true;
-                        popupSuccess.hidden = false;
-                        requestAnimationFrame(function () {
-                            popupSuccess.classList.add('is-visible');
-                        });
-                    }
-                }, function () {
-                    if (popupJoinBtn) {
-                        popupJoinBtn.disabled = false;
-                    }
-                    alert('Something went wrong signing you up. Please try again.');
-                });
+                fetch(mlScriptUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'newsletter', email: email, name: name })
+                })
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (result) {
+                        if (popupJoinBtn) {
+                            popupJoinBtn.disabled = false;
+                        }
+                        if (!result || !result.success) {
+                            alert('Something went wrong signing you up. Please try again.');
+                            return;
+                        }
+                        popupForm.reset();
+                        if (popupSignup && popupSuccess) {
+                            popupSignup.hidden = true;
+                            popupSuccess.hidden = false;
+                            requestAnimationFrame(function () {
+                                popupSuccess.classList.add('is-visible');
+                            });
+                        }
+                    })
+                    .catch(function () {
+                        if (popupJoinBtn) {
+                            popupJoinBtn.disabled = false;
+                        }
+                        alert('Something went wrong signing you up. Please try again.');
+                    });
             });
         }
     }
