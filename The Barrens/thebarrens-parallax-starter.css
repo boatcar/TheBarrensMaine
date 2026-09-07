@@ -1282,35 +1282,44 @@ img {
 
 @media (max-width: 700px) {
     #templatemo-footer {
-        min-height: 220px;
-        padding: 0 24px 40px;
+        position: relative;
+        min-height: 0;
+        padding: 48px 24px 88px;
     }
 
     .footer-inner {
+        display: flex;
+        flex-direction: column;
         align-items: center;
-        grid-template-columns: 1fr;
-    }
-
-    .footer-copy {
-        text-align: center;
+        gap: 14px;
     }
 
     .footer-meta {
-        align-items: center;
-        justify-self: center;
+        display: contents;
     }
 
     .footer-place {
-        align-items: center;
+        order: 1;
+    }
+
+    .footer-copy {
+        order: 2;
+        text-align: center;
+        font-size: 13px;
     }
 
     .footer-stay-wild {
-        justify-self: center;
+        width: 200px;
+        height: 74px;
     }
 
     .footer-links {
-        justify-content: center;
-        gap: 18px;
+        position: absolute;
+        left: 40px;
+        right: 40px;
+        bottom: 40px;
+        justify-content: space-between;
+        gap: 0;
     }
 }
 
@@ -2162,6 +2171,16 @@ h1,
     .about-page-shell .editorial-copy-column,
     .contact-page-shell .editorial-contact-form {
         padding: 30px 24px;
+    }
+
+    .editorial-contact-form textarea {
+        height: 120px;
+    }
+
+    .editorial-contact-form .btn-scroll {
+        align-self: stretch;
+        text-align: center;
+        margin-top: 16px;
     }
 }
 
