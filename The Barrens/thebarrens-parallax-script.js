@@ -347,10 +347,44 @@ https://templatemo.com/tm-612-parallax-starter
     // --- Contact Form ---
     var contactForm = document.getElementById('contactForm');
     if (contactForm) {
+        var contactScriptUrl = 'https://script.google.com/macros/s/AKfycbzfNEpMkS2Di7aW2HJyz5IXN1grdenXnh8oz53h0mm8pHnokjEsgVwdtBAmIIt7uWCF/exec';
+        var contactSubmitBtn = contactForm.querySelector('button[type="submit"]');
+
         contactForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            alert('Thank you for your message! We will get back to you soon.');
-            contactForm.reset();
+
+            var nameField = document.getElementById('contact-name');
+            var emailField = document.getElementById('contact-email');
+            var messageField = document.getElementById('contact-message');
+
+            var payload = {
+                name: nameField ? nameField.value.trim() : '',
+                email: emailField ? emailField.value.trim() : '',
+                message: messageField ? messageField.value.trim() : ''
+            };
+
+            if (contactSubmitBtn) {
+                contactSubmitBtn.disabled = true;
+            }
+
+            fetch(contactScriptUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+                .then(function () {
+                    alert('Thank you for your message! We will get back to you soon.');
+                    contactForm.reset();
+                })
+                .catch(function () {
+                    alert('Something went wrong sending your message. Please try again.');
+                })
+                .finally(function () {
+                    if (contactSubmitBtn) {
+                        contactSubmitBtn.disabled = false;
+                    }
+                });
         });
     }
 
