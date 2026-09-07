@@ -18,6 +18,45 @@ https://templatemo.com/tm-612-parallax-starter
     var sections = document.querySelectorAll('.parallax-section');
     var parallaxBgs = document.querySelectorAll('.parallax-bg');
     var revealElements = document.querySelectorAll('.section-content');
+    var footerRevealElements = document.querySelectorAll('#templatemo-footer .footer-inner > *');
+    var footer = document.getElementById('templatemo-footer');
+
+    if (footer) {
+        var footerInner = footer.querySelector('.footer-inner');
+        if (footerInner && !footerInner.querySelector('.footer-stay-wild')) {
+            var svgNamespace = 'http://www.w3.org/2000/svg';
+            var stayWildMark = document.createElementNS(svgNamespace, 'svg');
+            var arcPath = document.createElementNS(svgNamespace, 'path');
+            var arcText = document.createElementNS(svgNamespace, 'text');
+            var arcTextPath = document.createElementNS(svgNamespace, 'textPath');
+            var subtitle = document.createElementNS(svgNamespace, 'text');
+
+            stayWildMark.setAttribute('class', 'footer-stay-wild');
+            stayWildMark.setAttribute('viewBox', '0 0 220 80');
+            stayWildMark.setAttribute('role', 'img');
+            stayWildMark.setAttribute('aria-label', 'Stay Wild');
+            arcPath.setAttribute('id', 'footerStayWildArc');
+            arcPath.setAttribute('d', 'M 18 64 Q 110 8 202 64');
+            arcPath.setAttribute('fill', 'none');
+            arcTextPath.setAttribute('href', '#footerStayWildArc');
+            arcTextPath.setAttribute('startOffset', '50%');
+            arcTextPath.setAttribute('text-anchor', 'middle');
+            arcTextPath.textContent = 'STAY WILD';
+            subtitle.setAttribute('class', 'footer-stay-wild-subtitle');
+            subtitle.setAttribute('x', '110');
+            subtitle.setAttribute('y', '76.2');
+            subtitle.setAttribute('text-anchor', 'middle');
+            subtitle.textContent = 'MAINE BLUEBERRIES';
+
+            arcText.appendChild(arcTextPath);
+            stayWildMark.appendChild(arcPath);
+            stayWildMark.appendChild(arcText);
+            stayWildMark.appendChild(subtitle);
+            footerInner.appendChild(stayWildMark);
+        }
+    }
+
+    footerRevealElements = document.querySelectorAll('#templatemo-footer .footer-inner > *');
 
     // --- Detect mobile ---
     var isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
@@ -164,6 +203,10 @@ https://templatemo.com/tm-612-parallax-starter
         el.classList.add('reveal');
     });
 
+    footerRevealElements.forEach(function (el) {
+        el.classList.add('reveal');
+    });
+
     function checkReveal() {
         var windowHeight = window.innerHeight;
         var revealPoint = 120;
@@ -171,6 +214,13 @@ https://templatemo.com/tm-612-parallax-starter
         revealElements.forEach(function (el) {
             var elementTop = el.getBoundingClientRect().top;
             if (elementTop < windowHeight - revealPoint) {
+                el.classList.add('visible');
+            }
+        });
+
+        footerRevealElements.forEach(function (el) {
+            var elementTop = el.getBoundingClientRect().top;
+            if (elementTop < windowHeight - 12) {
                 el.classList.add('visible');
             }
         });
@@ -231,6 +281,33 @@ https://templatemo.com/tm-612-parallax-starter
         updateCompareSlider(compareRange.value);
     });
 
+    // --- Vision Intro Note Toggle ---
+    var visionToggle = document.querySelector('.vision-intro-toggle');
+    if (visionToggle) {
+        var visionAnswer = visionToggle.nextElementSibling;
+
+        if (visionAnswer && visionAnswer.classList.contains('vision-note-answer')) {
+            visionAnswer.style.maxHeight = '0px';
+            visionAnswer.style.opacity = '0';
+        }
+
+        visionToggle.addEventListener('click', function () {
+            var isOpen = visionToggle.getAttribute('aria-expanded') === 'true';
+
+            if (visionAnswer && visionAnswer.classList.contains('vision-note-answer')) {
+                if (!isOpen) {
+                    visionToggle.setAttribute('aria-expanded', 'true');
+                    visionAnswer.style.maxHeight = visionAnswer.scrollHeight + 'px';
+                    visionAnswer.style.opacity = '1';
+                } else {
+                    visionToggle.setAttribute('aria-expanded', 'false');
+                    visionAnswer.style.maxHeight = '0px';
+                    visionAnswer.style.opacity = '0';
+                }
+            }
+        });
+    }
+
     // --- FAQ Accordion ---
     var faqQuestions = document.querySelectorAll('.faq-question');
     faqQuestions.forEach(function (question) {
@@ -275,6 +352,131 @@ https://templatemo.com/tm-612-parallax-starter
             alert('Thank you for your message! We will get back to you soon.');
             contactForm.reset();
         });
+    }
+
+    // --- Follow the Build Popup ---
+    var popupOverlay = document.getElementById('followBuildPopup');
+    if (popupOverlay) {
+        var popupForm = document.getElementById('popupForm');
+        var popupClose = document.getElementById('popupClose');
+        var popupShown = sessionStorage.getItem('followBuildPopupShown') === 'true';
+
+        var showPopup = function () {
+            if (popupShown) {
+                return;
+            }
+            popupShown = true;
+            sessionStorage.setItem('followBuildPopupShown', 'true');
+            popupOverlay.hidden = false;
+            requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                    popupOverlay.classList.add('is-visible');
+                });
+            });
+        };
+
+        var hidePopup = function () {
+            popupOverlay.classList.remove('is-visible');
+            setTimeout(function () {
+                popupOverlay.hidden = true;
+            }, 300);
+        };
+
+        if (!popupShown) {
+            if (document.body.classList.contains('home-page-body')) {
+                window.addEventListener('scroll', function onFirstScroll() {
+                    window.removeEventListener('scroll', onFirstScroll);
+                    showPopup();
+                }, { once: true, passive: true });
+            } else {
+                setTimeout(showPopup, 1000);
+            }
+        }
+
+        if (popupClose) {
+            popupClose.addEventListener('click', hidePopup);
+        }
+
+        popupOverlay.addEventListener('click', function (e) {
+            if (e.target === popupOverlay) {
+                hidePopup();
+            }
+        });
+
+        if (popupForm) {
+            var popupSignup = document.getElementById('popupSignup');
+            var popupSuccess = document.getElementById('popupSuccess');
+            var popupEmailInput = document.getElementById('popup-email');
+            var popupNameInput = document.getElementById('popup-name');
+            var popupJoinBtn = popupForm.querySelector('.popup-join-btn');
+            var mlFormUrl = 'https://assets.mailerlite.com/jsonp/2620025/forms/97063943125184132/subscribe';
+
+            var submitToMailerLite = function (email, name, onSuccess, onError) {
+                var callbackName = 'mlPopupCallback_' + Date.now();
+                var script = document.createElement('script');
+
+                var cleanup = function () {
+                    delete window[callbackName];
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                };
+
+                window[callbackName] = function (response) {
+                    cleanup();
+                    if (response && response.success) {
+                        onSuccess();
+                    } else {
+                        onError();
+                    }
+                };
+
+                var params = 'fields[email]=' + encodeURIComponent(email) + '&callback=' + callbackName;
+                if (name) {
+                    params += '&fields[name]=' + encodeURIComponent(name);
+                }
+
+                script.src = mlFormUrl + '?' + params;
+                script.onerror = function () {
+                    cleanup();
+                    onError();
+                };
+                document.body.appendChild(script);
+            };
+
+            popupForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                var email = popupEmailInput ? popupEmailInput.value.trim() : '';
+                var name = popupNameInput ? popupNameInput.value.trim() : '';
+                if (!email) {
+                    return;
+                }
+
+                if (popupJoinBtn) {
+                    popupJoinBtn.disabled = true;
+                }
+
+                submitToMailerLite(email, name, function () {
+                    popupForm.reset();
+                    if (popupJoinBtn) {
+                        popupJoinBtn.disabled = false;
+                    }
+                    if (popupSignup && popupSuccess) {
+                        popupSignup.hidden = true;
+                        popupSuccess.hidden = false;
+                        requestAnimationFrame(function () {
+                            popupSuccess.classList.add('is-visible');
+                        });
+                    }
+                }, function () {
+                    if (popupJoinBtn) {
+                        popupJoinBtn.disabled = false;
+                    }
+                    alert('Something went wrong signing you up. Please try again.');
+                });
+            });
+        }
     }
 
 })();
