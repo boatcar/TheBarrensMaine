@@ -443,7 +443,7 @@ https://templatemo.com/tm-612-parallax-starter
             var popupEmailInput = document.getElementById('popup-email');
             var popupNameInput = document.getElementById('popup-name');
             var popupJoinBtn = popupForm.querySelector('.popup-join-btn');
-            var mlScriptUrl = 'https://script.google.com/macros/s/AKfycbzAM-TQdeUNj7VB4Rqh8PYVdOXUNkw2dRpvgwoesKzwM-zAk9BY8AjniLg788Dnq9B4/exec';
+            var mlScriptUrl = 'https://script.google.com/macros/s/AKfycbzx_RPxwXVqqibnEF9v4IZ62XPFJW2Fb9EE7XU53fIEIBX-_q5p9neXBFmNfSY7yboF/exec';
 
             popupForm.addEventListener('submit', function (e) {
                 e.preventDefault();
