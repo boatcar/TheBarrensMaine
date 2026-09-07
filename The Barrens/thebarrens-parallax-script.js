@@ -460,7 +460,7 @@ https://templatemo.com/tm-612-parallax-starter
 
                 fetch(mlScriptUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify({ type: 'newsletter', email: email, name: name })
                 })
                     .then(function (response) {
