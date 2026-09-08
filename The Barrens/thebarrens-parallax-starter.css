@@ -1299,7 +1299,7 @@ img {
     }
 
     .footer-place {
-        order: 1;
+        display: none;
     }
 
     .footer-copy {
@@ -1309,6 +1309,8 @@ img {
     }
 
     .footer-stay-wild {
+        order: 1;
+        justify-self: center;
         width: 200px;
         height: 74px;
     }
@@ -2990,3 +2992,64 @@ h1,
 .text-panel h2 {
     font-size: 24pt;
 }
+
+/* --- Zine Archive Page --- */
+.zine-page-body {
+    background: linear-gradient(180deg, #f3efe8 0%, #e8dfd2 100%);
+    color: var(--ink);
+}
+
+.zine-page-shell {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 140px 24px 100px;
+}
+
+.zine-page-intro {
+    text-align: center;
+    padding-bottom: 48px;
+}
+
+.zine-page-intro .eyebrow {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(29, 38, 31, 0.6);
+    margin-bottom: 14px;
+}
+
+.zine-page-intro h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(32px, 5vw, 48px);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #000;
+    margin: 0 0 12px;
+}
+
+.zine-page-intro p {
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: rgba(29, 38, 31, 0.7);
+}
+
+.zine-pages {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.zine-pages img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid rgba(29, 38, 31, 0.12);
+    box-shadow: 0 24px 48px rgba(20, 26, 21, 0.14);
+}
+
+.zine-page-close {
+    text-align: center;
+    padding-top: 56px;
+}
+
