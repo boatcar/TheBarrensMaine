@@ -87,14 +87,37 @@
         <section class="vision-page-close">
             <p class="eyebrow text-dark">THE BARRENS</p>
             <h2>Follow the build.</h2>
-            <p>Get monthly updates from the barrens and exclusive discounts in the merch store.</p>
-            <a href="contact.html" class="btn-scroll btn-light">GET UPDATES</a>
+            <p>Sign up for our monthly e-zine — progress from the land, original art, poems, stories, and the occasional discount, delivered straight to your inbox.</p>
+            <button type="button" class="btn-scroll btn-light js-open-follow-popup">GET UPDATES</button>
         </section>
     </main>
 
     <footer id="templatemo-footer">
         <div class="footer-inner"><div class="footer-place"><strong>THE BARRENS</strong><span>STOCKTON SPRINGS</span></div><div class="footer-meta"><nav class="footer-links" aria-label="Footer navigation"><a href="contact.html">CONTACT</a><a href="https://www.instagram.com/thebarrensmaine" target="_blank" rel="noopener noreferrer">INSTAGRAM</a></nav><p class="footer-copy">&copy; 2026 Sessa Farms LLC</p></div></div>
     </footer>
+
+    <div id="followBuildPopup" class="popup-overlay" hidden>
+        <div class="popup-modal" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+            <button type="button" class="popup-close" id="popupClose" aria-label="Close">&times;</button>
+            <div id="popupSignup">
+                <h3 id="popupTitle">Follow the Build</h3>
+                <p>Get behind the scenes access in the form of a monthly zine to your email. Follow the entire process from start to finish. Plus get first dibs on merch drops and early stay perks once we open our doors.</p>
+                <form id="popupForm" class="popup-form">
+                    <input type="email" id="popup-email" placeholder="Email" required>
+                    <input type="text" id="popup-name" placeholder="Name">
+                    <button type="submit" class="btn-scroll btn-light popup-join-btn">JOIN NOW</button>
+                </form>
+            </div>
+            <div id="popupSuccess" class="popup-success" hidden>
+                <h3>Welcome to the build.</h3>
+                <p>You're on the list. Keep an eye on your inbox for the monthly zine, first looks at the land, and early access once we open our doors.</p>
+                <div class="popup-success-links">
+                    <a href="https://www.instagram.com/thebarrensmaine" target="_blank" rel="noopener noreferrer">INSTAGRAM</a>
+                    <a href="https://www.youtube.com/@thebarrensmaine" target="_blank" rel="noopener noreferrer">YOUTUBE</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="thebarrens-parallax-script.js"></script>
 </body>

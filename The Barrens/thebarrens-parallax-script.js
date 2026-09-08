@@ -409,6 +409,17 @@ https://templatemo.com/tm-612-parallax-starter
             });
         };
 
+        var forceShowPopup = function () {
+            popupShown = true;
+            sessionStorage.setItem('followBuildPopupShown', 'true');
+            popupOverlay.hidden = false;
+            requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                    popupOverlay.classList.add('is-visible');
+                });
+            });
+        };
+
         var hidePopup = function () {
             popupOverlay.classList.remove('is-visible');
             setTimeout(function () {
@@ -422,10 +433,14 @@ https://templatemo.com/tm-612-parallax-starter
                     window.removeEventListener('scroll', onFirstScroll);
                     showPopup();
                 }, { once: true, passive: true });
-            } else {
+            } else if (document.querySelector('.contact-page-shell')) {
                 setTimeout(showPopup, 1000);
             }
         }
+
+        document.querySelectorAll('.js-open-follow-popup').forEach(function (trigger) {
+            trigger.addEventListener('click', forceShowPopup);
+        });
 
         if (popupClose) {
             popupClose.addEventListener('click', hidePopup);
