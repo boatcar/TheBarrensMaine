@@ -1037,12 +1037,14 @@ img {
 
 .popup-modal {
     position: relative;
-    width: min(460px, calc(100% - 40px));
-    background: #f5f0e5;
-    border-radius: 6px;
-    padding: 40px 36px;
+    width: min(560px, calc(100% - 40px));
+    background: #fbfaf6;
+    border: 1px solid rgba(29, 38, 31, 0.16);
+    border-radius: 0;
+    padding: 54px 48px 48px;
     box-sizing: border-box;
     box-shadow: 0 30px 60px rgba(20, 26, 21, 0.28);
+    text-align: center;
     opacity: 0;
     transform: translateY(18px) scale(0.97);
     transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
@@ -1054,19 +1056,31 @@ img {
 }
 
 .popup-modal h3 {
-    font-family: var(--font-body);
-    font-size: 26px;
+    font-family: var(--font-heading);
+    font-size: clamp(38px, 5vw, 56px);
     font-weight: 600;
+    line-height: 0.92;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
     color: #000;
-    margin: 0 0 16px;
+    margin: 12px 0 22px;
 }
 
 .popup-modal p {
     font-family: var(--font-body);
-    font-size: 14px;
+    font-size: 14pt;
     line-height: 1.55;
-    color: rgba(29, 38, 31, 0.75);
-    margin: 0 0 14px;
+    color: var(--ink-soft);
+    margin: 0 auto 22px;
+}
+
+.popup-modal .popup-eyebrow {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: 12px;
+    line-height: 1.2;
+    letter-spacing: 1.5px;
+    color: #000;
 }
 
 .popup-close {
@@ -1085,7 +1099,9 @@ img {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 18px;
+    margin-top: 26px;
+    padding-top: 26px;
+    border-top: 1px solid rgba(29, 38, 31, 0.16);
 }
 
 .popup-form input {
@@ -1142,6 +1158,21 @@ img {
 
 .popup-join-btn {
     text-align: center;
+}
+
+@media (max-width: 700px) {
+    .popup-modal {
+        width: calc(100% - 32px);
+        padding: 44px 24px 30px;
+    }
+
+    .popup-modal h3 {
+        font-size: 38px;
+    }
+
+    .popup-modal p {
+        font-size: 16px;
+    }
 }
 
 /* --- Footer --- */
@@ -1264,7 +1295,7 @@ img {
     color: var(--white);
 }
 
-.footer-copy {
+#templatemo-footer .footer-copy {
     font-size: 15.34px;
     letter-spacing: 1px;
     color: rgba(255, 255, 255, 0.5);
@@ -1713,7 +1744,7 @@ p,
 .detail-copy p,
 .text-panel p,
 .vision-feature-copy > p:last-child,
-.vision-page-intro > p:last-child,
+.vision-intro-toggle > p,
 .shop-hero-copy p,
 .editorial-block p {
     font-size: 14pt;
@@ -1789,6 +1820,7 @@ h1,
     background: transparent;
     border: 0;
     font: inherit;
+    color: inherit;
     text-align: left;
     cursor: pointer;
     -webkit-appearance: none;
@@ -1854,7 +1886,7 @@ h1,
 }
 
 .mission-page-intro {
-    padding: 10px 0 90px;
+    padding: 10px 0 48px;
     border-bottom: 1px solid rgba(29, 38, 31, 0.16);
 }
 
@@ -1876,7 +1908,7 @@ h1,
 }
 
 .mission-copy {
-    padding: 72px 0 30px;
+    padding: 48px 0 30px;
 }
 
 .mission-copy p,
@@ -2312,11 +2344,11 @@ h1,
     }
 
     .mission-page-intro {
-        padding-bottom: 58px;
+        padding-bottom: 36px;
     }
 
     .mission-copy {
-        padding-top: 48px;
+        padding-top: 36px;
     }
 }
 
@@ -2411,7 +2443,7 @@ h1,
     }
 }
 
-.vision-page-intro > p:last-child,
+.vision-intro-toggle > p,
 .vision-feature-copy > p:last-child {
     font-family: var(--font-body);
     font-size: 14pt;
