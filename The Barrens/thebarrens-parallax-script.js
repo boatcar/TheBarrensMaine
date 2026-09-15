@@ -16,8 +16,9 @@ https://templatemo.com/tm-612-parallax-starter
     var navLinks = document.getElementById('navLinks');
     var navItems = document.querySelectorAll('.nav-links a');
     var sections = document.querySelectorAll('.parallax-section');
-    var parallaxBgs = document.querySelectorAll('.parallax-bg');
+    var parallaxBgs = document.querySelectorAll('.parallax-bg, .hero-background-video');
     var revealElements = document.querySelectorAll('.section-content');
+    var homeLinkSections = document.querySelectorAll('.home-link-section');
     var footerRevealElements = document.querySelectorAll('#templatemo-footer .footer-inner > *');
     var footer = document.getElementById('templatemo-footer');
 
@@ -77,8 +78,40 @@ https://templatemo.com/tm-612-parallax-starter
 
     var ticking = false;
 
+    function setRevealProgress(element, progress, distance) {
+        var clampedProgress = Math.max(0, Math.min(1, progress));
+        element.style.opacity = clampedProgress.toFixed(3);
+        element.style.transform = 'translate3d(0,' + ((1 - clampedProgress) * distance).toFixed(1) + 'px,0)';
+    }
+
+    function updateHomePageTransitions() {
+        var windowHeight = window.innerHeight;
+        var revealDistance = windowHeight * 0.45;
+
+        homeLinkSections.forEach(function (section) {
+            var sectionTop = section.getBoundingClientRect().top;
+            var progress = (windowHeight - sectionTop) / revealDistance;
+            var clampedProgress = Math.max(0, Math.min(1, progress));
+            var scale = 0.985 + (clampedProgress * 0.015);
+            var clip = (1 - clampedProgress) * 12;
+
+            section.style.opacity = clampedProgress.toFixed(3);
+            section.style.transform = 'translate3d(0,' + ((1 - clampedProgress) * 140).toFixed(1) + 'px,0) scale(' + scale.toFixed(3) + ')';
+            section.style.clipPath = 'inset(' + clip.toFixed(2) + '% 0 0)';
+
+            setRevealProgress(section.querySelector('.home-link-number'), (clampedProgress - 0.12) / 0.38, 24);
+            setRevealProgress(section.querySelector('h2'), (clampedProgress - 0.22) / 0.42, 24);
+            setRevealProgress(section.querySelector('.home-link-action'), (clampedProgress - 0.34) / 0.46, 24);
+        });
+    }
+
     function updateParallax() {
-        if (isMobile) return;
+        updateHomePageTransitions();
+
+        if (isMobile) {
+            ticking = false;
+            return;
+        }
 
         var scrollTop = window.pageYOffset;
         var windowHeight = window.innerHeight;
@@ -203,6 +236,10 @@ https://templatemo.com/tm-612-parallax-starter
         el.classList.add('reveal');
     });
 
+    homeLinkSections.forEach(function (section) {
+        section.classList.add('home-scroll-reveal');
+    });
+
     footerRevealElements.forEach(function (el) {
         el.classList.add('reveal');
     });
@@ -228,6 +265,7 @@ https://templatemo.com/tm-612-parallax-starter
 
     window.addEventListener('scroll', checkReveal, { passive: true });
     checkReveal();
+    updateHomePageTransitions();
 
     // --- Before / After Image Slider ---
     var compareSliders = document.querySelectorAll('.image-slider-container');

@@ -2777,14 +2777,46 @@ h1,
 }
 
 /* --- Editorial home treatment --- */
-.hero-brand-section {
+.home-page-body .hero-brand-section {
+    position: relative;
     width: 100vw;
     margin-left: calc(50% - 50vw);
-    min-height: 88vh;
+    min-height: 130vh;
+    min-height: 130svh;
+    height: 130vh;
+    height: 130svh;
+    padding: 0;
     background: #151F00;
+    overflow: clip;
+}
+
+.hero-background-video {
+    position: absolute;
+    top: -30vh;
+    left: 0;
+    z-index: 0;
+    width: 100%;
+    height: calc(100% + 60vh);
+    object-fit: cover;
+    object-position: center;
+    will-change: transform;
+}
+
+.hero-brand-section::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: rgba(15, 24, 13, 0.16);
+    pointer-events: none;
 }
 
 .hero-brand-section .section-content {
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    min-height: 100vh;
+    min-height: 100svh;
     max-width: 1280px;
     text-align: left;
     padding-left: 7vw;
@@ -2804,6 +2836,28 @@ h1,
     margin-left: calc(50% - 50vw);
     padding: 0;
     background: var(--paper);
+}
+
+.home-page-body .home-link-vision {
+    position: relative;
+    z-index: 3;
+    margin-top: -30vh;
+    margin-top: -30svh;
+}
+
+.home-page-body .home-link-section.home-scroll-reveal {
+    opacity: 0;
+    transform: translateY(140px) scale(0.985);
+    clip-path: inset(12% 0 0);
+    will-change: opacity, transform, clip-path;
+}
+
+.home-scroll-reveal .home-link-number,
+.home-scroll-reveal .home-link-card h2,
+.home-scroll-reveal .home-link-action {
+    opacity: 0;
+    transform: translateY(24px);
+    will-change: opacity, transform;
 }
 
 .home-link-card {
@@ -3000,6 +3054,30 @@ h1,
 }
 
 @media (max-width: 768px) {
+    .home-page-body .hero-brand-section {
+        min-height: 100vh;
+        min-height: 100svh;
+        height: 100vh;
+        height: 100svh;
+    }
+
+    .home-page-body .home-link-vision {
+        margin-top: 0;
+    }
+
+    .hero-brand-section .section-content {
+        position: relative;
+    }
+
+    .home-page-body .home-link-section.home-scroll-reveal,
+    .home-scroll-reveal .home-link-number,
+    .home-scroll-reveal .home-link-card h2,
+    .home-scroll-reveal .home-link-action {
+        opacity: 1 !important;
+        transform: none !important;
+        clip-path: none !important;
+    }
+
     .hero-brand-section .section-content,
     .story-section .section-content {
         padding-left: 24px;
@@ -3023,6 +3101,18 @@ h1,
     .vision-story-content {
         padding-top: 80px;
         padding-bottom: 80px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-page-body .home-link-section.home-scroll-reveal,
+    .home-scroll-reveal .home-link-number,
+    .home-scroll-reveal .home-link-card h2,
+    .home-scroll-reveal .home-link-action {
+        opacity: 1 !important;
+        transform: none !important;
+        clip-path: none !important;
+        transition: none !important;
     }
 }
 
