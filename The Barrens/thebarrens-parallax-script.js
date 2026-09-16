@@ -21,6 +21,32 @@ https://templatemo.com/tm-612-parallax-starter
     var homeLinkSections = document.querySelectorAll('.home-link-section');
     var footerRevealElements = document.querySelectorAll('#templatemo-footer .footer-inner > *');
     var footer = document.getElementById('templatemo-footer');
+    var heroVideo = document.querySelector('.hero-background-video');
+
+    if (heroVideo) {
+        heroVideo.defaultMuted = true;
+        heroVideo.muted = true;
+        heroVideo.playsInline = true;
+
+        function startHeroVideo() {
+            if (heroVideo.paused) {
+                var playAttempt = heroVideo.play();
+                if (playAttempt) {
+                    playAttempt.catch(function () {});
+                }
+            }
+        }
+
+        heroVideo.addEventListener('canplay', startHeroVideo);
+        window.addEventListener('pageshow', startHeroVideo);
+        document.addEventListener('visibilitychange', function () {
+            if (!document.hidden) {
+                startHeroVideo();
+            }
+        });
+        document.addEventListener('touchstart', startHeroVideo, { passive: true, once: true });
+        startHeroVideo();
+    }
 
     if (footer) {
         var footerInner = footer.querySelector('.footer-inner');
@@ -86,22 +112,42 @@ https://templatemo.com/tm-612-parallax-starter
 
     function updateHomePageTransitions() {
         var windowHeight = window.innerHeight;
-        var revealDistance = windowHeight * 0.45;
+        var revealDistance = windowHeight * (isMobile ? 0.18 : 0.45);
+        var hero = document.querySelector('.hero-brand-section');
+        var visionSection = document.querySelector('.home-link-vision');
+
+        if (hero) {
+            hero.style.setProperty('--scroll-cue-opacity', Math.max(0, 1 - (window.pageYOffset / 80)).toFixed(3));
+        }
+
+        if (visionSection) {
+            var visionParallaxProgress = Math.max(0, Math.min(1, window.pageYOffset / (windowHeight * 0.35)));
+            var visionParallaxDistance = isMobile ? 32 : 64;
+            visionSection.style.setProperty('--vision-parallax-offset', (-visionParallaxProgress * visionParallaxDistance).toFixed(1) + 'px');
+        }
 
         homeLinkSections.forEach(function (section) {
             var sectionTop = section.getBoundingClientRect().top;
+            var card = section.querySelector('.home-link-card');
+            var isVision = section.classList.contains('home-link-vision');
             var progress = (windowHeight - sectionTop) / revealDistance;
             var clampedProgress = Math.max(0, Math.min(1, progress));
             var scale = 0.985 + (clampedProgress * 0.015);
             var clip = (1 - clampedProgress) * 12;
 
-            section.style.opacity = clampedProgress.toFixed(3);
-            section.style.transform = 'translate3d(0,' + ((1 - clampedProgress) * 140).toFixed(1) + 'px,0) scale(' + scale.toFixed(3) + ')';
-            section.style.clipPath = 'inset(' + clip.toFixed(2) + '% 0 0)';
+            card.style.opacity = isVision ? '1' : clampedProgress.toFixed(3);
+            card.style.transform = 'translate3d(0,' + ((1 - clampedProgress) * 140).toFixed(1) + 'px,0) scale(' + scale.toFixed(3) + ')';
+            card.style.clipPath = 'inset(' + clip.toFixed(2) + '% 0 0)';
 
             setRevealProgress(section.querySelector('.home-link-number'), (clampedProgress - 0.12) / 0.38, 24);
             setRevealProgress(section.querySelector('h2'), (clampedProgress - 0.22) / 0.42, 24);
             setRevealProgress(section.querySelector('.home-link-action'), (clampedProgress - 0.34) / 0.46, 24);
+
+            if (isVision) {
+                section.querySelector('.home-link-number').style.opacity = '1';
+                section.querySelector('h2').style.opacity = '1';
+                section.querySelector('.home-link-action').style.opacity = '1';
+            }
         });
     }
 
@@ -166,9 +212,12 @@ https://templatemo.com/tm-612-parallax-starter
         }
     }
 
+    window.addEventListener('scroll', onScroll, { passive: true });
+
     if (!isMobile) {
-        window.addEventListener('scroll', onScroll, { passive: true });
         updateParallax();
+    } else {
+        updateHomePageTransitions();
     }
 
     // Recalculate on resize

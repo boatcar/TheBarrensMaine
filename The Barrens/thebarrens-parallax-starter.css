@@ -2778,37 +2778,42 @@ h1,
 
 /* --- Editorial home treatment --- */
 .home-page-body .hero-brand-section {
+    --scroll-cue-opacity: 1;
     position: relative;
     width: 100vw;
     margin-left: calc(50% - 50vw);
-    min-height: 130vh;
-    min-height: 130svh;
-    height: 130vh;
-    height: 130svh;
+    min-height: 100vh;
+    min-height: 100svh;
+    height: 100vh;
+    height: 100svh;
     padding: 0;
-    background: #151F00;
-    overflow: clip;
+    background: var(--paper);
+    overflow: visible;
 }
 
 .hero-background-video {
     position: absolute;
-    top: -30vh;
+    top: -4vh;
     left: 0;
     z-index: 0;
     width: 100%;
-    height: calc(100% + 60vh);
+    height: calc(108vh + 400px);
+    height: calc(108svh + 400px);
     object-fit: cover;
     object-position: center;
     will-change: transform;
 }
 
-.hero-brand-section::after {
+.hero-brand-section::before {
     content: "";
     position: absolute;
-    inset: 0;
+    inset: 0 0 -400px;
     z-index: 1;
-    background: rgba(15, 24, 13, 0.16);
     pointer-events: none;
+}
+
+.hero-brand-section::before {
+    background: rgba(15, 24, 13, 0.16);
 }
 
 .hero-brand-section .section-content {
@@ -2830,6 +2835,30 @@ h1,
     align-self: center;
 }
 
+.hero-scroll-cue {
+    position: absolute;
+    right: 28px;
+    bottom: 24px;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-family: var(--font-heading);
+    font-size: 9px;
+    line-height: 1;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: var(--scroll-cue-opacity);
+    transition: opacity 0.15s ease;
+}
+
+.hero-scroll-arrow {
+    font-size: 14px;
+    line-height: 1;
+    letter-spacing: 0;
+}
+
 .home-page-body .home-link-section {
     width: 100vw;
     min-height: 72vh;
@@ -2839,13 +2868,21 @@ h1,
 }
 
 .home-page-body .home-link-vision {
+    --vision-parallax-offset: 0px;
     position: relative;
     z-index: 3;
-    margin-top: -30vh;
-    margin-top: -30svh;
+    margin-top: var(--vision-parallax-offset);
+    background: #b9c9bf;
+    will-change: margin-top;
 }
 
 .home-page-body .home-link-section.home-scroll-reveal {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+}
+
+.home-scroll-reveal .home-link-card {
     opacity: 0;
     transform: translateY(140px) scale(0.985);
     clip-path: inset(12% 0 0);
@@ -2860,15 +2897,24 @@ h1,
     will-change: opacity, transform;
 }
 
+.home-scroll-reveal.home-link-vision .home-link-card,
+.home-scroll-reveal.home-link-vision .home-link-number,
+.home-scroll-reveal.home-link-vision .home-link-card h2,
+.home-scroll-reveal.home-link-vision .home-link-action {
+    opacity: 1;
+}
+
 .home-link-card {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: min(1180px, 86vw);
-    min-height: 56vh;
-    margin: 8vh auto;
-    padding: 42px;
+    width: min(1240px, 90vw);
+    height: 60vh;
+    min-height: 540px;
+    margin: 6vh auto;
+    padding: 48px;
     border: 1px solid rgba(21, 31, 0, 0.24);
+    box-sizing: border-box;
     color: #151f00;
     transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
 }
@@ -2924,6 +2970,10 @@ h1,
 }
 
 .home-link-mission .home-link-card {
+    background: #c9d5c2;
+}
+
+.home-page-body .home-link-mission {
     background: #c9d5c2;
 }
 
@@ -3061,6 +3111,14 @@ h1,
         height: 100svh;
     }
 
+    .home-page-body .home-link-card {
+        width: calc(100% - 32px);
+        height: 56svh;
+        min-height: 420px;
+        margin: 24px auto;
+        padding: 28px 24px;
+    }
+
     .home-page-body .home-link-vision {
         margin-top: 0;
     }
@@ -3070,6 +3128,7 @@ h1,
     }
 
     .home-page-body .home-link-section.home-scroll-reveal,
+    .home-scroll-reveal .home-link-card,
     .home-scroll-reveal .home-link-number,
     .home-scroll-reveal .home-link-card h2,
     .home-scroll-reveal .home-link-action {
@@ -3106,6 +3165,7 @@ h1,
 
 @media (prefers-reduced-motion: reduce) {
     .home-page-body .home-link-section.home-scroll-reveal,
+    .home-scroll-reveal .home-link-card,
     .home-scroll-reveal .home-link-number,
     .home-scroll-reveal .home-link-card h2,
     .home-scroll-reveal .home-link-action {
