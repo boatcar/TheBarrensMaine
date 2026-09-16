@@ -2788,7 +2788,7 @@ h1,
     height: 100svh;
     padding: 0;
     background: var(--paper);
-    overflow: visible;
+    overflow: hidden;
 }
 
 .hero-background-video {
@@ -2797,8 +2797,8 @@ h1,
     left: 0;
     z-index: 0;
     width: 100%;
-    height: calc(108vh + 400px);
-    height: calc(108svh + 400px);
+    height: 108vh;
+    height: 108svh;
     object-fit: cover;
     object-position: center;
     will-change: transform;
@@ -2807,7 +2807,7 @@ h1,
 .hero-brand-section::before {
     content: "";
     position: absolute;
-    inset: 0 0 -400px;
+    inset: 0;
     z-index: 1;
     pointer-events: none;
 }
