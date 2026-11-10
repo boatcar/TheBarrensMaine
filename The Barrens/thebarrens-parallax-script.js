@@ -395,6 +395,57 @@ https://templatemo.com/tm-612-parallax-starter
         });
     }
 
+    // --- Agritourism Notice Reveal ---
+    var detailNotice = document.querySelector('.detail-notice');
+    if (detailNotice) {
+        var detailNoticeSummary = detailNotice.querySelector('summary');
+        var detailNoticeReveal = detailNotice.querySelector('.detail-notice-reveal');
+        var detailNoticeAnimation = null;
+        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+        if (detailNoticeSummary && detailNoticeReveal) {
+            detailNoticeSummary.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                if (detailNoticeAnimation) {
+                    detailNoticeAnimation.cancel();
+                    detailNoticeAnimation = null;
+                }
+
+                if (reduceMotion.matches) {
+                    detailNotice.open = !detailNotice.open;
+                    return;
+                }
+
+                if (!detailNotice.open) {
+                    detailNotice.open = true;
+                    detailNoticeAnimation = detailNoticeReveal.animate([
+                        { height: '0px', opacity: 0, transform: 'translateY(-12px)' },
+                        { height: detailNoticeReveal.scrollHeight + 'px', opacity: 1, transform: 'translateY(0)' }
+                    ], {
+                        duration: 420,
+                        easing: 'cubic-bezier(0.22, 1, 0.36, 1)'
+                    });
+                } else {
+                    detailNoticeAnimation = detailNoticeReveal.animate([
+                        { height: detailNoticeReveal.offsetHeight + 'px', opacity: 1, transform: 'translateY(0)' },
+                        { height: '0px', opacity: 0, transform: 'translateY(-12px)' }
+                    ], {
+                        duration: 300,
+                        easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+                    });
+                    detailNoticeAnimation.addEventListener('finish', function () {
+                        detailNotice.open = false;
+                    }, { once: true });
+                }
+
+                detailNoticeAnimation.addEventListener('finish', function () {
+                    detailNoticeAnimation = null;
+                }, { once: true });
+            });
+        }
+    }
+
     // --- FAQ Accordion ---
     var faqQuestions = document.querySelectorAll('.faq-question');
     faqQuestions.forEach(function (question) {
@@ -475,7 +526,279 @@ https://templatemo.com/tm-612-parallax-starter
         });
     }
 
-    // --- Follow the Build Popup ---
+    // --- U Pick booking preview ---
+    var bookingForm = document.getElementById('upickBookingForm');
+    if (bookingForm) {
+        var bookingState = {
+            type: 'standard',
+            day: null,
+            time: null,
+            adults: 1,
+            children: 0
+        };
+        var standardTimes = [
+            '6:00 AM', '6:10 AM', '6:20 AM', '6:30 AM',
+            '9:00 AM', '9:10 AM', '9:20 AM', '9:30 AM',
+            '12:00 PM', '12:10 PM', '12:20 PM', '12:30 PM',
+            '3:00 PM', '3:10 PM', '3:20 PM', '3:30 PM',
+            '6:00 PM', '6:10 PM'
+        ];
+        var privateTimes = ['6:00 AM', '9:00 AM', '12:00 PM', '3:00 PM', '6:00 PM'];
+        var calendarDays = document.getElementById('bookingCalendarDays');
+        var timeFieldset = bookingForm.querySelector('.booking-times-fieldset');
+        var timeGrid = document.getElementById('bookingTimeGrid');
+        var timePrompt = document.getElementById('bookingTimePrompt');
+        var experienceButtons = bookingForm.querySelectorAll('[data-booking-type]');
+        var counterButtons = bookingForm.querySelectorAll('[data-counter]');
+        var adultsOutput = document.getElementById('bookingAdults');
+        var childrenOutput = document.getElementById('bookingChildren');
+        var adultRate = document.getElementById('bookingAdultRate');
+        var reviewExperience = document.getElementById('bookingReviewExperience');
+        var reviewDate = document.getElementById('bookingReviewDate');
+        var reviewTime = document.getElementById('bookingReviewTime');
+        var reviewParty = document.getElementById('bookingReviewParty');
+        var reviewTotal = document.getElementById('bookingReviewTotal');
+        var previewSubmit = document.getElementById('bookingPreviewSubmit');
+        var previewMessage = document.getElementById('bookingPreviewMessage');
+        var bookingModal = document.getElementById('reserve');
+        var bookingLaunchButtons = document.querySelectorAll('[data-booking-open]');
+        var bookingCloseButton = bookingModal.querySelector('[data-booking-close]');
+        var lastBookingTrigger = null;
+        var bookingCloseTimer = null;
+
+        function pluralize(count, singular, plural) {
+            return count + ' ' + (count === 1 ? singular : plural);
+        }
+
+        function formatBookingDate(day) {
+            return new Date(2027, 7, day).toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function updateCounterButtons() {
+            var totalGuests = bookingState.adults + bookingState.children;
+
+            counterButtons.forEach(function (button) {
+                var counter = button.getAttribute('data-counter');
+                var direction = button.getAttribute('data-direction');
+                var count = bookingState[counter];
+                button.disabled = (direction === 'decrease' && count <= (counter === 'adults' ? 1 : 0))
+                    || (direction === 'increase' && totalGuests >= 5);
+            });
+        }
+
+        function updateBookingReview() {
+            var partyParts = [pluralize(bookingState.adults, 'adult', 'adults')];
+            if (bookingState.children > 0) {
+                partyParts.push(pluralize(bookingState.children, 'child', 'children'));
+            }
+
+            adultsOutput.textContent = bookingState.adults;
+            childrenOutput.textContent = bookingState.children;
+            adultRate.textContent = bookingState.type === 'private' ? '/ included' : '/ $15 each';
+            reviewExperience.textContent = bookingState.type === 'private'
+                ? 'Private Barrens Pass'
+                : 'Standard field reservation';
+            reviewDate.textContent = bookingState.day ? formatBookingDate(bookingState.day) : 'Choose a date';
+            reviewTime.textContent = bookingState.time || 'Choose a time';
+            reviewParty.textContent = partyParts.join(', ');
+            reviewTotal.textContent = bookingState.type === 'private'
+                ? '$300'
+                : '$' + (bookingState.adults * 15);
+            previewSubmit.disabled = !(bookingState.day && bookingState.time);
+            updateCounterButtons();
+        }
+
+        function isSampleTimeSoldOut(day, index) {
+            if (bookingState.type === 'private') {
+                return (day + (index * 2)) % 9 === 0;
+            }
+            return (day + index) % 7 === 0;
+        }
+
+        function renderBookingTimes() {
+            var times = bookingState.type === 'private' ? privateTimes : standardTimes;
+            timeGrid.innerHTML = '';
+
+            if (!bookingState.day) {
+                timeFieldset.disabled = true;
+                timePrompt.textContent = 'Select an available date to see arrival times.';
+                return;
+            }
+
+            timeFieldset.disabled = false;
+            timePrompt.textContent = bookingState.type === 'private'
+                ? 'Private Pass times reserve the entire two-hour wave.'
+                : 'Each arrival time holds one vehicle for a two-hour reservation.';
+
+            times.forEach(function (time, index) {
+                var timeButton = document.createElement('button');
+                var soldOut = isSampleTimeSoldOut(bookingState.day, index);
+                timeButton.type = 'button';
+                timeButton.className = 'booking-time-option';
+                timeButton.textContent = time;
+                timeButton.disabled = soldOut;
+                timeButton.title = soldOut ? time + ' is sold out in this preview' : 'Choose ' + time;
+
+                if (time === bookingState.time) {
+                    timeButton.classList.add('is-selected');
+                    timeButton.setAttribute('aria-pressed', 'true');
+                } else {
+                    timeButton.setAttribute('aria-pressed', 'false');
+                }
+
+                timeButton.addEventListener('click', function () {
+                    bookingState.time = time;
+                    previewMessage.textContent = '';
+                    renderBookingTimes();
+                    updateBookingReview();
+                });
+                timeGrid.appendChild(timeButton);
+            });
+        }
+
+        function selectBookingDay(day, button) {
+            bookingState.day = day;
+            bookingState.time = null;
+            previewMessage.textContent = '';
+            calendarDays.querySelectorAll('.booking-calendar-day').forEach(function (dayButton) {
+                var isSelected = dayButton === button;
+                dayButton.classList.toggle('is-selected', isSelected);
+                dayButton.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+            });
+            renderBookingTimes();
+            updateBookingReview();
+        }
+
+        for (var day = 1; day <= 31; day += 1) {
+            var date = new Date(2027, 7, day);
+            var dateButton = document.createElement('button');
+            dateButton.type = 'button';
+            dateButton.className = 'booking-calendar-day';
+            dateButton.textContent = day;
+            dateButton.disabled = date.getDay() === 0;
+            dateButton.setAttribute('aria-label', formatBookingDate(day) + (dateButton.disabled ? ', closed' : ', available'));
+            dateButton.setAttribute('aria-pressed', 'false');
+
+            (function (bookingDay, bookingDayButton) {
+                bookingDayButton.addEventListener('click', function () {
+                    selectBookingDay(bookingDay, bookingDayButton);
+                });
+            }(day, dateButton));
+
+            calendarDays.appendChild(dateButton);
+        }
+
+        experienceButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                bookingState.type = button.getAttribute('data-booking-type');
+                bookingState.time = null;
+                previewMessage.textContent = '';
+                experienceButtons.forEach(function (option) {
+                    var isSelected = option === button;
+                    option.classList.toggle('is-selected', isSelected);
+                    option.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+                });
+                renderBookingTimes();
+                updateBookingReview();
+            });
+        });
+
+        counterButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var counter = button.getAttribute('data-counter');
+                var direction = button.getAttribute('data-direction');
+                bookingState[counter] += direction === 'increase' ? 1 : -1;
+                previewMessage.textContent = '';
+                updateBookingReview();
+            });
+        });
+
+        bookingForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            previewMessage.textContent = 'Preview complete. Live checkout will open here once secure booking is connected.';
+        });
+
+        function openBookingModal(trigger) {
+            var requestedType = trigger.getAttribute('data-booking-open') || 'standard';
+            var requestedOption = bookingForm.querySelector('[data-booking-type="' + requestedType + '"]');
+            lastBookingTrigger = trigger;
+            clearTimeout(bookingCloseTimer);
+
+            if (requestedOption) {
+                requestedOption.click();
+            }
+
+            bookingModal.hidden = false;
+            bookingModal.scrollTop = 0;
+            document.body.classList.add('booking-modal-open');
+            requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                    bookingModal.classList.add('is-visible');
+                    bookingCloseButton.focus();
+                });
+            });
+        }
+
+        function closeBookingModal() {
+            bookingModal.classList.remove('is-visible');
+            document.body.classList.remove('booking-modal-open');
+            bookingCloseTimer = setTimeout(function () {
+                bookingModal.hidden = true;
+                if (lastBookingTrigger) {
+                    lastBookingTrigger.focus();
+                }
+            }, 220);
+        }
+
+        bookingLaunchButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                openBookingModal(button);
+            });
+        });
+
+        bookingCloseButton.addEventListener('click', closeBookingModal);
+
+        bookingModal.addEventListener('click', function (event) {
+            if (event.target === bookingModal) {
+                closeBookingModal();
+            }
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (bookingModal.hidden) {
+                return;
+            }
+
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                closeBookingModal();
+                return;
+            }
+
+            if (event.key === 'Tab') {
+                var focusableElements = bookingModal.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
+                var firstFocusable = focusableElements[0];
+                var lastFocusable = focusableElements[focusableElements.length - 1];
+
+                if (event.shiftKey && document.activeElement === firstFocusable) {
+                    event.preventDefault();
+                    lastFocusable.focus();
+                } else if (!event.shiftKey && document.activeElement === lastFocusable) {
+                    event.preventDefault();
+                    firstFocusable.focus();
+                }
+            }
+        });
+
+        renderBookingTimes();
+        updateBookingReview();
+    }
+
+    // --- Get Updates Popup ---
     var popupOverlay = document.getElementById('followBuildPopup');
     if (popupOverlay) {
         var popupForm = document.getElementById('popupForm');
